@@ -10,23 +10,15 @@
         </PackageReference>
     </ItemGroup>
     <ItemGroup>
-        <Reference Include="Assembly-CSharp">
-            <HintPath>../Vanilla/Assembly-CSharp.dll</HintPath>
+        <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+            <HintPath>../vanilla/Assembly-CSharp.dll</HintPath>
+            <SpecificVersion>False</SpecificVersion>
         </Reference>
-        <Reference Include="UnityEngine">
-            <HintPath>../Vanilla/UnityEngine.dll</HintPath>
+        <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+            <HintPath>../vanilla/UnityEngine.dll</HintPath>
         </Reference>
-        <Reference Include="PlayMaker">
-            <HintPath>../Vanilla/PlayMaker.dll</HintPath>
-        </Reference>
-        <Reference Include="UnityEngine.UI">
-            <HintPath>../Vanilla/UnityEngine.UI.dll</HintPath>
-        </Reference>
-        <Reference Include="Assembly-CSharp-firstpass">
-            <HintPath>../Vanilla/Assembly-CSharp-firstpass.dll</HintPath>
-        </Reference>
-        <Reference Include="GalaxyCSharp">
-            <HintPath>../Vanilla/GalaxyCSharp.dll</HintPath>
+        <Reference Include="PlayMaker, Version=1.6.0.0, Culture=neutral, PublicKeyToken=null">
+            <HintPath>../vanilla/PlayMaker.dll</HintPath>
         </Reference>
     </ItemGroup>
     <ItemGroup>

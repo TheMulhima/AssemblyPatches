@@ -1,16 +1,38 @@
-using System;
 using System.Collections;
-using System.IO;
 using System.Reflection;
-using InControl;
 using UnityEngine;
+using MonoMod;
+using System.IO;
+using System;
+using HutongGames.PlayMaker.Actions;
 
-namespace Patches.MiniSaveStates;
+#pragma warning disable CS0626
+
+namespace Patches;
+[Serializable]
+public class Keybinds
+{
+    public string LoadStateButton = "f1";
+    public string SaveStateButton = "f2";
+}
+
+[Serializable]
+public class Multiplier
+{
+    public float multiplier = 1f;
+}
+
+[Serializable]
+public struct SavedState
+{
+    public string saveScene;
+    public PlayerData savedPlayerData;
+    public SceneData savedSceneData;
+    public Vector3 savePos;
+}
 
 public static class SaveStateManager
 {
-    public static bool LoadedKeyBinds = false;
-    
     private static object lockArea;
     private static readonly FieldInfo cameraGameplayScene = typeof(CameraController)
         .GetField("isGameplayScene", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -57,26 +79,13 @@ public static class SaveStateManager
         lockArea = cameraLockArea.GetValue(GameManager.instance.cameraCtrl);
     }
 
-    public static string KeybindsJsonPath => Path.Combine(Application.persistentDataPath, "minisavestates.json");
-
     public static void LoadKeybinds()
     {
         try
         {
-            Keybinds = JsonUtility.FromJson<Keybinds>(File.ReadAllText(KeybindsJsonPath));
-            LoadedKeyBinds = true;
-        }
-        catch (Exception e)
-        {
-            Debug.LogError(e);
-        }
-    }
-    
-    public static void SaveKeybinds()
-    {
-        try
-        {
-            File.WriteAllText(KeybindsJsonPath,JsonUtility.ToJson(Keybinds, true));
+            Keybinds = JsonUtility.FromJson<Keybinds>(
+                File.ReadAllText(Application.persistentDataPath + "/minisavestates.json")
+            );
         }
         catch (Exception e)
         {
@@ -155,5 +164,127 @@ public static class SaveStateManager
 
         GameManager.instance.inputHandler.RefreshPlayerData();
         yield break;
+    }
+}
+
+public static class ScreenShakeModifier
+{
+    public static void EditScreenShake()
+    {
+        LoadMultiplier();
+        var fsm = GameCameras.instance.cameraShakeFSM;
+
+        foreach (var state in fsm.FsmStates)
+        {
+            foreach (var action in state.Actions)
+            {
+                if (action is iTweenShakePosition iTweenShakePosition)
+                {
+                    iTweenShakePosition.vector = iTweenShakePosition.vector.Value * Multiplier.multiplier;
+                }
+            }
+        }
+    }
+
+    public static Multiplier Multiplier = new Multiplier();
+    public static string MultiplierPath => Path.Combine(Application.persistentDataPath, "screenShakeModifier.json");
+    
+    public static void LoadMultiplier()
+    {
+        try
+        {
+            if (!File.Exists(MultiplierPath))
+            {
+                File.WriteAllText(MultiplierPath, JsonUtility.ToJson(Multiplier, true));
+            }
+            
+            Multiplier = JsonUtility.FromJson<Multiplier>(File.ReadAllText(MultiplierPath));
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e);
+        }
+    }
+}
+
+
+[MonoModPatch("global::GameManager")]
+public class GameManagerPatch : global::GameManager
+{
+
+    public const bool IsMiniSaveStatesActive = false;
+    public const bool IsScreenShakeModifierActive = true;
+    private void OnGUI()
+    {
+        if (this.GetSceneNameString() == Constants.MENU_SCENE)
+        {
+            var oldBackgroundColor = GUI.backgroundColor;
+            var oldContentColor = GUI.contentColor;
+            var oldColor = GUI.color;
+            var oldMatrix = GUI.matrix;
+
+            GUI.backgroundColor = Color.white;
+            GUI.contentColor = Color.white;
+            GUI.color = Color.white;
+            GUI.matrix = Matrix4x4.TRS(
+                Vector3.zero,
+                Quaternion.identity,
+                new Vector3(Screen.width / 1920f, Screen.height / 1080f, 1f)
+            );
+
+            string WarningText = string.Empty;
+            if (IsMiniSaveStatesActive && IsScreenShakeModifierActive)
+            {
+                WarningText = "MiniSaveStates and ScreenShakeModifier Active";
+            }
+            else if (IsMiniSaveStatesActive)
+            {
+                WarningText = "MiniSaveStates Active";
+            }
+            else if (IsScreenShakeModifierActive)
+            {
+                WarningText = "ScreenShakeModifier Active";
+            }
+            
+            GUI.Label(
+                new Rect(20f, 20f, 200f, 200f),
+                WarningText,
+                new GUIStyle
+                {
+                    fontSize = 30,
+                    normal = new GUIStyleState
+                    {
+                        textColor = Color.white,
+                    }
+                }
+            );
+
+            GUI.backgroundColor = oldBackgroundColor;
+            GUI.contentColor = oldContentColor;
+            GUI.color = oldColor;
+            GUI.matrix = oldMatrix;
+        }
+    }
+
+    public void Update()
+    {
+        if (!IsMiniSaveStatesActive) return;
+        if (Input.GetKeyDown(SaveStateManager.Keybinds.SaveStateButton))
+        {
+            SaveStateManager.SaveState();
+        }
+        else if (Input.GetKeyDown(SaveStateManager.Keybinds.LoadStateButton))
+        {
+            SaveStateManager.LoadState();
+        }
+    }
+
+    public extern void orig_Start();
+
+    public void Start()
+    {
+        orig_Start();
+        if (IsMiniSaveStatesActive) SaveStateManager.LoadKeybinds();
+        if (IsScreenShakeModifierActive) ScreenShakeModifier.EditScreenShake();
     }
 }

@@ -3,6 +3,17 @@
         <TargetFramework>net35</TargetFramework>
         <AssemblyName>Assembly-CSharp.mm</AssemblyName>
         <LangVersion>latest</LangVersion>
+        <Configurations>ScreenShakeOnly;MiniSaveStatesOnly;ScreenShakeAndMiniSaveStates</Configurations>
+        <Platforms>AnyCPU</Platforms>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration) == 'ScreenShakeOnly'">
+        <DefineConstants>SCREENSHAKEONLY</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration) == 'MiniSaveStatesOnly'">
+        <DefineConstants>MINISAVESTATESONLY</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration) == 'ScreenShakeAndMiniSaveStates'">
+        <DefineConstants>SCREENSHAKEANDMINISAVESTATES</DefineConstants>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="MonoMod" Version="21.1.11.1">
@@ -29,6 +40,6 @@
         <Copy SkipUnchangedFiles="true" SourceFiles="@(Files)" DestinationFolder="@(BuildDir)" />
         <Delete Condition="Exists('MONOMODDED_Assembly-CSharp.dll')" Files="MONOMODDED_Assembly-CSharp.dll" />
         <Exec WorkingDirectory="@(BuildDir)" Command="MonoMod.exe Assembly-CSharp.dll" />
-        <Copy SourceFiles="$(TargetDir)/MONOMODDED_Assembly-CSharp.dll" DestinationFiles="$(SolutionDir)/out/Assembly-CSharp.dll" />
+        <Copy SourceFiles="$(TargetDir)/MONOMODDED_Assembly-CSharp.dll" DestinationFiles="$(SolutionDir)/out/$(Configuration)/Assembly-CSharp.dll" />
     </Target>
 </Project>

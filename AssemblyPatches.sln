@@ -7,28 +7,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssemblyPatches", "Assembly
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Debug|x64 = Debug|x64
-		Debug|x86 = Debug|x86
-		Release|Any CPU = Release|Any CPU
-		Release|x64 = Release|x64
-		Release|x86 = Release|x86
+		ScreenShakeOnly|Any CPU = ScreenShakeOnly|Any CPU
+		MiniSaveStatesOnly|Any CPU = MiniSaveStatesOnly|Any CPU
+		ScreenShakeAndMiniSaveStates|Any CPU = ScreenShakeAndMiniSaveStates|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CA098B27-B526-4E3C-8070-85F09187B48E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CA098B27-B526-4E3C-8070-85F09187B48E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CA098B27-B526-4E3C-8070-85F09187B48E}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{CA098B27-B526-4E3C-8070-85F09187B48E}.Debug|x64.Build.0 = Debug|Any CPU
-		{CA098B27-B526-4E3C-8070-85F09187B48E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{CA098B27-B526-4E3C-8070-85F09187B48E}.Debug|x86.Build.0 = Debug|Any CPU
-		{CA098B27-B526-4E3C-8070-85F09187B48E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CA098B27-B526-4E3C-8070-85F09187B48E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CA098B27-B526-4E3C-8070-85F09187B48E}.Release|x64.ActiveCfg = Release|Any CPU
-		{CA098B27-B526-4E3C-8070-85F09187B48E}.Release|x64.Build.0 = Release|Any CPU
-		{CA098B27-B526-4E3C-8070-85F09187B48E}.Release|x86.ActiveCfg = Release|Any CPU
-		{CA098B27-B526-4E3C-8070-85F09187B48E}.Release|x86.Build.0 = Release|Any CPU
+		{CA098B27-B526-4E3C-8070-85F09187B48E}.ScreenShakeOnly|Any CPU.ActiveCfg = ScreenShakeOnly|Any CPU
+		{CA098B27-B526-4E3C-8070-85F09187B48E}.ScreenShakeOnly|Any CPU.Build.0 = ScreenShakeOnly|Any CPU
+		{CA098B27-B526-4E3C-8070-85F09187B48E}.MiniSaveStatesOnly|Any CPU.ActiveCfg = MiniSaveStatesOnly|Any CPU
+		{CA098B27-B526-4E3C-8070-85F09187B48E}.MiniSaveStatesOnly|Any CPU.Build.0 = MiniSaveStatesOnly|Any CPU
+		{CA098B27-B526-4E3C-8070-85F09187B48E}.ScreenShakeAndMiniSaveStates|Any CPU.ActiveCfg = ScreenShakeAndMiniSaveStates|Any CPU
+		{CA098B27-B526-4E3C-8070-85F09187B48E}.ScreenShakeAndMiniSaveStates|Any CPU.Build.0 = ScreenShakeAndMiniSaveStates|Any CPU
 	EndGlobalSection
 EndGlobal

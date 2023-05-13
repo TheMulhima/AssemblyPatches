@@ -9,8 +9,18 @@ namespace Patches;
 [MonoModPatch("global::GameManager")]
 public class GameManagerPatch : global::GameManager
 {
+    #if SCREENSHAKEONLY
     public const bool IsMiniSaveStatesActive = false;
     public const bool IsScreenShakeModifierActive = true;
+    #endif
+    #if MINISAVESTATESONLY
+    public const bool IsMiniSaveStatesActive = true;
+    public const bool IsScreenShakeModifierActive = false;
+    #endif
+    #if SCREENSHAKEANDMINISAVESTATES
+    public const bool IsMiniSaveStatesActive = true;
+    public const bool IsScreenShakeModifierActive = true;
+    #endif
     private void OnGUI()
     {
         if (this.GetSceneNameString() == Constants.MENU_SCENE)

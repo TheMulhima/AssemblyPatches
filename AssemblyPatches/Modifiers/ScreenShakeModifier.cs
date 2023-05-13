@@ -18,9 +18,22 @@ public static class ScreenShakeModifier
         {
             foreach (var action in state.Actions)
             {
-                if (action is iTweenShakePosition iTweenShakePosition)
+                if (Constants.GAME_VERSION != "1.4.3.2")
                 {
-                    iTweenShakePosition.vector = iTweenShakePosition.vector.Value * Multiplier.multiplier;
+                    if (action is iTweenShakePosition iTweenShakePosition)
+                    {
+                        iTweenShakePosition.vector = iTweenShakePosition.vector.Value * Multiplier.multiplier;
+                    }
+                }
+                else
+                {
+                    var type = action.GetType();
+                    if (type.FullName == "HutongGames.PlayMaker.Actions.ShakePosition")
+                    {
+                        var extentsFieldInfo = type.GetField("extents", BindingFlags.Instance | BindingFlags.Public);
+                        var extents = (FsmVector3) extentsFieldInfo.GetValue(action);
+                        extentsFieldInfo.SetValue(action, (FsmVector3) (extents.Value * Multiplier.multiplier));
+                    }
                 }
             }
         }

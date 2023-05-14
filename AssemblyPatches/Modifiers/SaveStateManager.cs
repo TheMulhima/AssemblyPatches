@@ -131,11 +131,11 @@ public static class SaveStateManager
         HeroAnimationController component = HeroController.instance.GetComponent<HeroAnimationController>();
         typeof(HeroAnimationController).GetField("pd", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(component, PlayerData.instance);
 
-        HeroController.instance.TakeHealth(1);
-        HeroController.instance.AddHealth(1);
+        GameCameras.instance.hudCanvas.gameObject.SetActive(false);
         GameCameras.instance.hudCanvas.gameObject.SetActive(true);
-        HeroController.instance.TakeHealth(1);
-        HeroController.instance.AddHealth(1);
+
+        var furyFsm = HeroController.instance.gameObject.transform.Find("Charm Effects").gameObject.LocateMyFSM("Fury");
+        furyFsm.SendEvent("HERO DAMAGED");
 
         GameManager.instance.inputHandler.RefreshPlayerData();
         yield break;
